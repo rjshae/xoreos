@@ -49,6 +49,8 @@
 #include "src/engines/nwn2/roster.h"
 #include "src/engines/nwn2/journal.h"
 
+#include "src/engines/nwn2/gui/ingame/ingame.h"
+
 namespace Engines {
 
 namespace NWN2 {
@@ -61,11 +63,13 @@ bool Module::Action::operator<(const Action &s) const {
 Module::Module(::Engines::Console &console) : Object(kObjectTypeModule), _console(&console),
 	_hasModule(false), _running(false), _exit(false), _pc(0), _currentArea(0), _ranPCSpawn(false) {
 
+	_ingameGUI.reset(new IngameGUI(*this, _console));
 }
 
 Module::Module() : Object(kObjectTypeModule), _console(nullptr), _hasModule(false),
 	_running(false), _exit(false), _pc(0), _currentArea(0), _ranPCSpawn(false) {
 
+	_ingameGUI.reset(new IngameGUI(*this));
 }
 
 Module::~Module() {
@@ -257,12 +261,16 @@ void Module::enter(Creature &pc, bool isNewCampaign) {
 	CameraMan.setOrientation(90.0f, 0.0f, entryAngle);
 	CameraMan.update();
 
+	_ingameGUI->show();
+
 	_running = true;
 	_exit    = false;
 }
 
 void Module::leave() {
 	runScript(kScriptExit, this, _pc);
+
+	_ingameGUI->hide();
 
 	_running = false;
 	_exit    = true;
@@ -347,6 +355,7 @@ void Module::handleEvents() {
 	_eventQueue.clear();
 
 	_currentArea->processEventQueue();
+	_ingameGUI->processEventQueue();
 }
 
 void Module::handleActions() {
@@ -583,6 +592,10 @@ void Module::delayScript(const Common::UString &script,
 	action.timestamp = EventMan.getTimestamp() + delay;
 
 	_delayedActions.insert(action);
+}
+
+void Module::displayGUIScene(const Common::UString &xml, Aurora::NWScript::Object *owner) {
+	_ingameGUI->displayGUIScene(xml, owner);
 }
 
 Common::UString Module::getName(const Common::UString &module) {

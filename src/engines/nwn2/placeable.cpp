@@ -268,6 +268,11 @@ bool Placeable::open(Object *opener) {
 
 	_state = kStateOpen;
 
+	// Display the container panel
+	Area *area = getArea();
+	if (area)
+		area->getModule().displayGUIScene("container", this);
+
 	return true;
 }
 

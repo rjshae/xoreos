@@ -87,3 +87,4 @@ src_engines_nwn2_libnwn2_la_SOURCES += \
     $(EMPTY)
 
 include src/engines/nwn2/script/rules.mk
+include src/engines/nwn2/gui/rules.mk

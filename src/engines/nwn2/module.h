@@ -29,6 +29,7 @@
 #include <list>
 #include <map>
 #include <set>
+#include <memory>
 
 #include "src/common/scopedptr.h"
 #include "src/common/ptrmap.h"
@@ -56,6 +57,8 @@ class Creature;
 class Factions;
 class Roster;
 class Journal;
+
+class IngameGUI;
 
 class Module : public NWN2::Object, public NWN2::ObjectContainer {
 public:
@@ -99,6 +102,9 @@ public:
 	                 const Aurora::NWScript::ScriptState &state,
 	                 Aurora::NWScript::Object *owner, Aurora::NWScript::Object *triggerer,
 	                 uint32 delay);
+
+	/** Display a GUI interface. */
+	void displayGUIScene(const Common::UString &xml, Aurora::NWScript::Object *owner = nullptr);
 
 	// .--- PC management
 	/** Move the player character to this area. */
@@ -169,6 +175,8 @@ private:
 	bool _hasModule; ///< Do we have a module?
 	bool _running;   ///< Are we currently running a module?
 	bool _exit;      ///< Should we exit the module?
+
+	std::unique_ptr<IngameGUI> _ingameGUI; ///< The ingame GUI elements.
 
 	/** Resources added by the module. */
 	Common::ChangeID _resModule;

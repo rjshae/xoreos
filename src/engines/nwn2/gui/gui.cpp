@@ -28,7 +28,8 @@ namespace Engines {
 
 namespace NWN2 {
 
-GUI::GUI(::Engines::Console *console) : ::Engines::GUI(console) {
+GUI::GUI(const Common::UString &xml, Aurora::NWScript::Object *owner, ::Engines::Console *console) :
+	::Engines::GUI(console), _xml(xml), _owner(owner) {
 }
 
 } // End of namespace NWN2

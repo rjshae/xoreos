@@ -31,6 +31,12 @@
 
 #include "src/engines/aurora/gui.h"
 
+namespace Aurora {
+	namespace NWScript {
+		class Object;
+	}
+}
+
 namespace Engines {
 
 namespace NWN2 {
@@ -38,8 +44,13 @@ namespace NWN2 {
 /** A NWN2 GUI. */
 class GUI : public ::Engines::GUI {
 public:
-	GUI(::Engines::Console *console = 0);
+	GUI(const Common::UString &xml, Aurora::NWScript::Object *owner, ::Engines::Console *console = 0);
 	~GUI() = default;
+
+private:
+	const Common::UString _xml;
+
+	Aurora::NWScript::Object *_owner;
 };
 
 } // End of namespace NWN2

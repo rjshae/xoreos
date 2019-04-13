@@ -26,6 +26,7 @@
 #define ENGINES_NWN2_GUI_INGAME_INGAME_H
 
 #include <vector>
+#include <memory>
 
 #include "src/aurora/nwscript/object.h"
 
@@ -40,6 +41,7 @@ class Console;
 namespace NWN2 {
 
 class Module;
+class GUI;
 
 /** The NWN2 ingame GUI elements. */
 class IngameGUI {
@@ -55,7 +57,12 @@ public:
 	void displayGUIScene(const Common::UString &xml, Aurora::NWScript::Object *owner);
 
 private:
+	typedef std::unique_ptr<GUI> GUIScene;
+	typedef std::vector<GUIScene> GUIScenes;
+
 	Module *_module;
+
+	GUIScenes _guiScenes;
 };
 
 } // End of namespace NWN2

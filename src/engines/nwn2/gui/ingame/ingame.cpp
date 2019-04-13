@@ -24,6 +24,8 @@
 
 #include "src/common/util.h"
 
+#include "src/engines/nwn2/gui/gui.h"
+
 #include "src/engines/nwn2/gui/ingame/ingame.h"
 
 namespace Engines {
@@ -48,7 +50,8 @@ void IngameGUI::hide() {
 void IngameGUI::processEventQueue() {
 }
 
-void IngameGUI::displayGUIScene(const Common::UString &UNUSED(xml), Aurora::NWScript::Object *UNUSED(owner)) {
+void IngameGUI::displayGUIScene(const Common::UString &xml, Aurora::NWScript::Object *owner) {
+	_guiScenes.emplace_back(new GUI(xml, owner));
 }
 
 } // End of namespace NWN2

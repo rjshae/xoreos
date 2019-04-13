@@ -51,6 +51,8 @@ private:
 	const Common::UString _xml;
 
 	Aurora::NWScript::Object *_owner;
+
+	void load();
 };
 
 } // End of namespace NWN2

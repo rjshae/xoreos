@@ -299,8 +299,10 @@ Common::UString XMLFixer::fixParams(Common::UString params) {
 	params.split(params, static_cast<uint32>(','), args);
 
 	// If there is only one segment, just return it
-	if (args.size() < 2)
+	if (args.size() < 2) {
+		params = stripEndQuotes(params);
 		return "&quot;" + params + "&quot;";
+	}
 
 	// Reassemble the arguments, with quotes
 	params.clear();

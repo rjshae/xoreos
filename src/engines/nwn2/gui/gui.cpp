@@ -22,6 +22,14 @@
  *  A NWN2 GUI.
  */
 
+#include <memory>
+
+#include "src/common/xml.h"
+
+#include "src/aurora/types.h"
+#include "src/aurora/resman.h"
+#include "src/aurora/xmlfixer.h"
+
 #include "src/engines/nwn2/gui/gui.h"
 
 namespace Engines {
@@ -30,6 +38,25 @@ namespace NWN2 {
 
 GUI::GUI(const Common::UString &xml, Aurora::NWScript::Object *owner, ::Engines::Console *console) :
 	::Engines::GUI(console), _xml(xml), _owner(owner) {
+
+	load();
+}
+
+void GUI::load() {
+	// Load XML resource file into memory
+	std::unique_ptr<Common::SeekableReadStream> stream(ResMan.getResource(_xml, Aurora::kFileTypeXML));
+	if (!stream)
+		throw Common::Exception("Can't load XML resource file \"%s\" for GUI", _xml.c_str());
+
+	// Fix broken, non-standard NWN2 XML
+	std::unique_ptr<Common::SeekableReadStream> fixed(Aurora::XMLFixer::fixXMLStream(*stream));
+	if (!fixed)
+		throw Common::Exception("Can't convert \"%s\" XML resource file to standard XML", _xml.c_str());
+
+	// Parse the repaired XML
+	std::unique_ptr<Common::XMLParser> parser(new Common::XMLParser(*fixed));
+	if (!parser)
+		throw Common::Exception("Can't parse fixed \"%s\" XML file", _xml.c_str());
 }
 
 } // End of namespace NWN2
